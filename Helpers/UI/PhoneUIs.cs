@@ -59,7 +59,14 @@ namespace MobilePhone.Helpers.UI
             Console.WriteLine($"               │    *    │    0    │    #    │");
             Console.WriteLine($"               └─────────────────────────────┘");
             Console.WriteLine();
-            Console.WriteLine("\nType the number you want to dial: ");
+
+            Console.WriteLine("     -------------------- Kredit -----------------------");
+            Console.WriteLine("     -------------- Nar - *700# - 3 AZN ----------------");
+            Console.WriteLine("     ------------ Bakcell - *150# - 2 AZN --------------");
+            Console.WriteLine("     ------------ Azercell - *100# - 0.50 AZN ----------------");
+            Console.WriteLine("     ------------- Naxtel - *100*1# - 1 AZN ----------------");
+            Console.WriteLine();
+            Console.WriteLine("Type the number you want to dial: ");
 
         }
 

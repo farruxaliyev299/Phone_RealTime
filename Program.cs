@@ -45,10 +45,10 @@ namespace MobilePhone
             Phone newPhone;
             do
             {
-                Console.Write("Nomrenizi daxil edin: ");
+                Console.Write("Enter your number: ");
                 string? numberInput = Console.ReadLine();
 
-                Console.Write("Balansi daxil edin: ");
+                Console.Write("Enter your initial balance: ");
                 decimal balanceInput = decimal.Parse(Console.ReadLine());
 
                 newPhone = new()
