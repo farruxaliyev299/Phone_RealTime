@@ -18,8 +18,16 @@ public class Phone : ErrorsBase
         errors = new List<PhoneError>();
     }
 
+    public static Dictionary<string, string> credits = new()
+        {
+            { "Bakcell", "*150#" },
+            { "Nar", "*700#" },
+            { "Azercell", "*100#" },
+            { "Naxtel", "*100*1#" }
+        };
+
     private string _number;
-    public string Number 
+    public string Number
     {
         get => _number;
         set
@@ -29,7 +37,7 @@ public class Phone : ErrorsBase
             List<string> providers = GetProviders(typeof(Provider));
 
 
-            if(PhoneNumberValidation.IsValidWithoutAnything(value, providers))
+            if (PhoneNumberValidation.IsValidWithoutAnything(value, providers))
             {
                 _number = "+994" + value;
 
@@ -45,7 +53,7 @@ public class Phone : ErrorsBase
 
                 return;
             };
-            if(PhoneNumberValidation.IsValidWithZeroAtStart(value, providers))
+            if (PhoneNumberValidation.IsValidWithZeroAtStart(value, providers))
             {
                 _number = "+994" + value.Substring(1);
 
@@ -60,7 +68,7 @@ public class Phone : ErrorsBase
     public string NumberProvider { get; set; }
 
     private decimal _balance;
-    public decimal Balance 
+    public decimal Balance
     {
         get => _balance;
         set
@@ -102,16 +110,16 @@ public class Phone : ErrorsBase
         switch (this.NumberProvider)
         {
             case "Bakcell":
-                this.Balance += 2.00M;
+                this.Balance += 2;
                 break;
             case "Azercell":
-                this.Balance += 0.50M;
+                this.Balance += 0.5M;
                 break;
             case "Nar":
-                this.Balance += 3.00M;
+                this.Balance += 3;
                 break;
             case "Naxtel":
-                this.Balance += 1.00M;
+                this.Balance += 1;
                 break;
             default:
                 return;

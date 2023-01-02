@@ -169,5 +169,54 @@ namespace MobilePhone.Helpers.UI
             Console.WriteLine($"                   │    *    │    0    │    #    │");
             Console.WriteLine($"                   └─────────────────────────────┘");
         }
+
+        public static void TakingCreditUI(Phone phone, string message = "")
+        {
+            var providerUI = phone.NumberProvider == "Bakcell" ?
+                "Bakcell " : phone.NumberProvider == "Nar" ?
+                "Nar     " : phone.NumberProvider == "Azercell" ?
+                "Azercell" : phone.NumberProvider == "Naxtel" ?
+                "Naxtel  " : phone.NumberProvider == null ?
+                "        " : " ";
+
+            var creditSum = phone.Balance + "AZN";
+
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine($"                   ┌─────────────────────────────┐");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │  {providerUI}              \\|/  │");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                             {message}            ");
+            Console.WriteLine($"                               {creditSum}           ");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │─────────────────────────────│");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │─────────┐    |    ┌─────────│");
+            Console.WriteLine($"                   │    Y    │  ─ + ─  │    N    │");
+            Console.WriteLine($"                   │─────────┘    |    └─────────│");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │                             │");
+            Console.WriteLine($"                   │───────── ───────── ─────────│");
+            Console.WriteLine($"                   │    1    │    2    │    3    │");
+            Console.WriteLine($"                   │───────── ───────── ─────────│");
+            Console.WriteLine($"                   │    4    │    5    │    6    │");
+            Console.WriteLine($"                   │───────── ───────── ─────────│");
+            Console.WriteLine($"                   │    7    │    8    │    9    │");
+            Console.WriteLine($"                   │───────── ───────── ─────────│");
+            Console.WriteLine($"                   │    *    │    0    │    #    │");
+            Console.WriteLine($"                   └─────────────────────────────┘");
+        }
     }
 }

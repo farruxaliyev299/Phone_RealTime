@@ -34,11 +34,15 @@ namespace MobilePhone.Helpers.Validations
         //Combines all phone number validations in case you don't need them in separate
         public static bool IsValid(string number, List<string> providers)
         {
-            if (!IsValidWithoutAnything(number, providers)) return false;
-            if (!IsValidWithCountryCode(number, providers)) return false;
-            if (!IsValidWithZeroAtStart(number, providers)) return false;
 
-            return true;
+            if(IsValidWithCountryCode(number,providers) ||
+               IsValidWithoutAnything(number, providers) ||
+               IsValidWithZeroAtStart(number, providers))
+            {
+                return true;
+            }
+
+            return false;
         }
         
     }

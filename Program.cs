@@ -10,7 +10,7 @@ using System.Security.Cryptography.Xml;
 
 namespace MobilePhone
 {
-    internal class Program
+    public class Program
     {
         static async Task Main(string[] args)
         {
@@ -73,20 +73,19 @@ namespace MobilePhone
 
             bool acceptStatus = false;
 
+            bool started = false;
 
             Console.WriteLine("\nPress Y key to begin call...");
-            while (Startup(phone, dateTime, src))
+            while (Startup(phone, dateTime, src, ref acceptStatus))
             {
+                started = true;
                 Task waitForInput = new Task(() => Wait(phone, dateTime, tokenSource, ref acceptStatus));
                 Task limitCounter = new Task(() => SecondLimitViolated(phone, dateTime, tokenSource, ref acceptStatus));
 
                 waitForInput.Start();
-                Console.WriteLine("Calling....");
-                Console.WriteLine("\nPress Y to accept the call");
                 limitCounter.Start();
                 break;
             }
-
 
             while (!Wait(phone, dateTime, tokenSource, ref acceptStatus))
             {
@@ -97,25 +96,43 @@ namespace MobilePhone
             }
         }
 
-        static bool Startup(Phone phone ,DateTime dateTime, CancellationTokenSource src, string? number = "")
+        static bool Startup(Phone phone, DateTime dateTime, CancellationTokenSource src, ref bool acceptstatus, string? number = "")
         {
-
+            List<string> providers = Phone.GetProviders(typeof(Provider));
             var keyInfo = Console.ReadKey(true);
             src.Cancel();
-            if (keyInfo.Key == ConsoleKey.Y)
+            if (keyInfo.Key == ConsoleKey.Y && ((PhoneNumberValidation.IsValid(number, providers)) || Phone.credits.Any(cr => cr.Value == number)))
             {
+                if (Phone.credits.Any(cr => cr.Value == number))
+                {
+                    var provider = Phone.credits.FirstOrDefault(pr => pr.Value == number);
+                    if (phone.NumberProvider == provider.Key)
+                    {
+                        phone.TakeCredit();
+                        PhoneUIs.TakingCreditUI(phone);
+                        Task.Delay(1000).Wait();
+                        return Wait(phone, dateTime, src, ref acceptstatus, ConsoleKey.N);
+                    }
+                    else
+                    {
+                        PhoneUIs.TakingCreditUI(phone, "False Provider");
+                        Task.Delay(1000).Wait();
+                        return Wait(phone, dateTime, src, ref acceptstatus, ConsoleKey.N);
+                    }
+
+                }
                 return true;
             }
-            else if(keyInfo.Key == ConsoleKey.Backspace && number.Length > 0)
+            else if (keyInfo.Key == ConsoleKey.Backspace && number.Length > 0)
             {
                 number = number?[0..(number.Length - 1)];
             }
-            else if (Char.IsDigit(keyInfo.KeyChar) && number?.Length <= 13)
+            else if ((Char.IsDigit(keyInfo.KeyChar) || keyInfo.KeyChar == '+' || keyInfo.KeyChar == '*' || keyInfo.KeyChar == '#') && number?.Length <= 13)
             {
                 number += keyInfo.KeyChar;
             }
             PhoneUIs.DialUpPhaseUI(phone, number);
-            return Startup(phone ,dateTime, src, number);
+            return Startup(phone, dateTime, src, ref acceptstatus ,number);
         }
 
         static bool Cancellation(DateTime dateTime, CancellationTokenSource tokenSrc, char keyInfo)
@@ -128,7 +145,7 @@ namespace MobilePhone
             return Cancellation(dateTime, tokenSrc, keyInfo);
         }
 
-        static void Start(Phone phone, DateTime dateTime, ref bool acceptStatus, CancellationTokenSource cts)
+        static DateTime Start(Phone phone, DateTime dateTime, ref bool acceptStatus, CancellationTokenSource cts)
         {
             acceptStatus = true;
             while (true && !cts.IsCancellationRequested)
@@ -139,10 +156,24 @@ namespace MobilePhone
                 Task.Delay(1000).Wait();
                 dateTime = dateTime.AddSeconds(1);
             }
+            return dateTime;
         }
 
-        static bool Wait(Phone phone, DateTime dateTime, CancellationTokenSource cts, ref bool acceptStatus)
+        static bool Wait(Phone phone, DateTime dateTime, CancellationTokenSource cts, ref bool acceptStatus, ConsoleKey urgentCancel = ConsoleKey.C)
         {
+            if(urgentCancel == ConsoleKey.N)
+            {
+                if (Cancellation(dateTime, cts, 'n'))
+                {
+                    acceptStatus = true;
+
+                    Console.Clear();
+                    PhoneUIs.CallingPhaseUI(phone, false);
+                    Task.Delay(1000).Wait();
+                    return true;
+                }
+            }
+
             char keyInfo = Console.ReadKey(true).KeyChar;
             if (cts.IsCancellationRequested) return true;
 
@@ -151,6 +182,7 @@ namespace MobilePhone
                 if (Cancellation(dateTime, cts, keyInfo))
                 {
                     acceptStatus = true;
+
                     Console.Clear();
                     PhoneUIs.CallingPhaseUI(phone, false);
                     Task.Delay(1000).Wait();
