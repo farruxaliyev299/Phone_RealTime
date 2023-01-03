@@ -109,17 +109,23 @@ namespace MobilePhone
                     if (phone.NumberProvider == provider.Key)
                     {
                         phone.TakeCredit();
-                        PhoneUIs.TakingCreditUI(phone);
+                        PhoneUIs.BalanceUI(phone);
                         Task.Delay(1000).Wait();
                         return Wait(phone, dateTime, src, ref acceptstatus, ConsoleKey.N);
                     }
                     else
                     {
-                        PhoneUIs.TakingCreditUI(phone, "False Provider");
+                        PhoneUIs.BalanceUI(phone, "False Provider");
                         Task.Delay(1000).Wait();
                         return Wait(phone, dateTime, src, ref acceptstatus, ConsoleKey.N);
                     }
+                }
 
+                if (phone.Balance < 0.06M)
+                {
+                    PhoneUIs.BalanceUI(phone, "Balance insufficient");
+                    Task.Delay(1000).Wait();
+                    return Wait(phone, dateTime, src, ref acceptstatus, ConsoleKey.N);
                 }
                 return true;
             }
@@ -156,6 +162,9 @@ namespace MobilePhone
                 Task.Delay(1000).Wait();
                 dateTime = dateTime.AddSeconds(1);
             }
+            phone.Balance -= dateTime.Second * 0.001M;
+            PhoneUIs.BalanceUI(phone, "Left balance");
+            Task.Delay(1000).Wait();
             return dateTime;
         }
 

@@ -170,7 +170,7 @@ namespace MobilePhone.Helpers.UI
             Console.WriteLine($"                   └─────────────────────────────┘");
         }
 
-        public static void TakingCreditUI(Phone phone, string message = "")
+        public static void BalanceUI(Phone phone, string message = "")
         {
             var providerUI = phone.NumberProvider == "Bakcell" ?
                 "Bakcell " : phone.NumberProvider == "Nar" ?
@@ -193,7 +193,7 @@ namespace MobilePhone.Helpers.UI
             Console.WriteLine($"                   │                             │");
             Console.WriteLine($"                   │                             │");
             Console.WriteLine($"                   │                             │");
-            Console.WriteLine($"                             {message}            ");
+            Console.WriteLine($"                          {message}               ");
             Console.WriteLine($"                               {creditSum}           ");
             Console.WriteLine($"                   │                             │");
             Console.WriteLine($"                   │                             │");
